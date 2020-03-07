@@ -29,7 +29,6 @@ def decorate(roadData):
     stime,road,etime=stime.strftime("%Y{y}%m{m}%d{d}%H{h}%M{m1}").format(y='年', m='月', d='日',h="时",m1="分",),roadData[3],etime.strftime("%Y{y}%m{m}%d{d}%H{h}%M{m1}").format(y='年', m='月', d='日',h="时",m1="分",)
     #text='北中心各位同事：1.停电地点：北京市大兴区%s；2.停电时间：%s；3.停电原因：%s故障；4.预计恢复时间：%s。如有以上地点客户反映停电报修或投诉，请客服人员代为解释，谢谢！'%(user,stime,road,etime)
     text=user.replace('time',stime,1)
-    text += '\n@王凤强 15810219187'
     print('报备信息'.center(40,'-'))
     print(text)
     print('-'.center(44,'-'))
