@@ -1,5 +1,6 @@
 import xlrd,itchat,datetime,pyperclip
 from itchat.content import *
+import pandas as pd
 workbook=xlrd.open_workbook('大兴10kV线路停电报备信息汇总.xlsx')
 sheet=workbook.sheet_by_index(0)
 rows=sheet.get_rows()
@@ -17,6 +18,12 @@ def main():
     msg=decorate(roadData)
     pyperclip.copy(msg)
     print("已复制粘贴板，请发送")
+def roadConfirm(road):
+    #road=input('请输入路名：>>>')
+    if road in roadList:
+       return 0
+    else:
+       return 1
 def get(road):
     n = roadList.index(road)
     roadData = sheet.row_values(n)
@@ -28,22 +35,30 @@ def decorate(roadData):
     stime,road,etime=stime.strftime("%Y{y}%m{m}%d{d}%H{h}%M{m1}").format(y='年', m='月', d='日',h="时",m1="分",),roadData[3],etime.strftime("%Y{y}%m{m}%d{d}%H{h}%M{m1}").format(y='年', m='月', d='日',h="时",m1="分",)
     #text='北中心各位同事：1.停电地点：北京市大兴区%s；2.停电时间：%s；3.停电原因：%s故障；4.预计恢复时间：%s。如有以上地点客户反映停电报修或投诉，请客服人员代为解释，谢谢！'%(user,stime,road,etime)
     text=user.replace('time',stime,1).replace('time',etime,1)
-    text += '王凤强 15810219187'
+    save(roadData[2], stime, text)
     print('报备信息'.center(40,'-'))
     print(text)
     print('-'.center(44,'-'))
     return text
+def save(road, stime, text):
+    df = pd.read_excel('data.xlsx', 'Sheet1')
+    txt = {
+        '路名':road,
+        '时间':stime,
+        '报备内容':text
+    }
+    df = df.append(txt, ignore_index = True)
+    df.to_excel('data.xlsx', 'Sheet1')
+    #print(df)
+
+
+
+
 def wechat(text,contact):
     itchat.auto_login(hotReload=True)
     #itchat.auto_login()
     #itchat.send(text, toUserName='filehelper')
     SentChatRoomsMsg(contact,text)
-def roadConfirm(road):
-    #road=input('请输入路名：>>>')
-    if road in roadList:
-       return 0
-    else:
-       return 1
 def SentChatRoomsMsg(name, context):
     #itchat.auto_login(hotReload=True)
     #if not (itchat.auto_login()):
