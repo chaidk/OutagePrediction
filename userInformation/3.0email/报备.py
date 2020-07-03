@@ -35,15 +35,16 @@ def decorate(roadData):
     stime,road,etime=stime.strftime("%Y{y}%m{m}%d{d}%H{h}%M{m1}").format(y='年', m='月', d='日',h="时",m1="分",),roadData[3],etime.strftime("%Y{y}%m{m}%d{d}%H{h}%M{m1}").format(y='年', m='月', d='日',h="时",m1="分",)
     #text='北中心各位同事：1.停电地点：北京市大兴区%s；2.停电时间：%s；3.停电原因：%s故障；4.预计恢复时间：%s。如有以上地点客户反映停电报修或投诉，请客服人员代为解释，谢谢！'%(user,stime,road,etime)
     text=user.replace('time',stime,1).replace('time',etime,1)
-    save(roadData[2], stime, text)
+    save(roadData[2], roadData[1]， stime, text)
     print('报备信息'.center(40,'-'))
     print(text)
     print('-'.center(44,'-'))
     return text
-def save(road, stime, text):
+def save(road, unit, stime, text):
     df = pd.read_excel('data.xlsx', 'Sheet1')
     txt = {
         '路名':road,
+        '运行单位':unit,
         '时间':stime,
         '报备内容':text
     }
